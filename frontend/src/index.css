@@ -1434,6 +1434,220 @@ body {
   color: #444;
 }
 
+/* ── Promo Carousel ── */
+.promo-carousel-section {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.promo-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.promo-carousel-slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 1;
+}
+.promo-carousel-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+.promo-carousel-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.1) 60%);
+}
+.promo-carousel-content {
+  position: absolute;
+  top: 50%;
+  left: 5rem;
+  transform: translateY(-50%);
+  z-index: 3;
+  color: white;
+  max-width: 500px;
+}
+.promo-carousel-badge {
+  background: white;
+  color: #111;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+}
+.promo-carousel-title {
+  font-size: 4.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  letter-spacing: -1px;
+}
+.promo-carousel-subtitle {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: pre-line;
+}
+.promo-carousel-indicators {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+.promo-indicators-pill {
+  background: white;
+  padding: 0.6rem 1rem;
+  border-radius: 30px;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.promo-indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ccc;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding: 0;
+}
+.promo-indicator-dot.active {
+  background: #222;
+}
+
+/* ── Reviews Carousel ── */
+.reviews-section {
+  padding: 4rem 2rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+.reviews-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -1px;
+}
+.reviews-nav {
+  display: flex;
+  gap: 1rem;
+}
+.nav-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #111;
+}
+.nav-btn:hover {
+  border-color: #111;
+  background: #f9f9f9;
+}
+.reviews-carousel-wrapper {
+  position: relative;
+  width: 100%;
+}
+.reviews-scroll-container {
+  display: flex;
+  gap: 2rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-bottom: 2rem; /* space for scrollbar */
+}
+.reviews-scroll-container::-webkit-scrollbar {
+  height: 8px;
+}
+.reviews-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+.reviews-scroll-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+.review-card {
+  display: flex;
+  flex: 0 0 750px;
+  background: #fdfdfd;
+  border-radius: 20px;
+  scroll-snap-align: start;
+  border: 1px solid #f1f1f1;
+}
+.review-shoe-img {
+  width: 300px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.review-shoe-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.review-content {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.review-text {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: #111;
+  font-weight: 500;
+  margin-bottom: 2.5rem;
+}
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.author-img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.author-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.author-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #111;
+}
+.author-rating {
+  display: flex;
+  gap: 0.15rem;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .lp-hero {

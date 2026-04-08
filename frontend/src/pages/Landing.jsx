@@ -1,123 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import shoe1 from '../assets/shoe1.jpg';
 import shoe2 from '../assets/shoe2.jpg';
 import shoe3 from '../assets/shoe3.jpg';
 import shoe4 from '../assets/shoe4.jpg';
 import { Recycle, ShieldCheck, Truck, Globe, Star } from 'lucide-react';
-import shoe5 from '../assets/shoe5.jpg';
-import shoe6 from '../assets/shoe6.jpg';
-import shoe7 from '../assets/shoe7.jpg';
-import shoe8 from '../assets/shoe8.jpg';
-import shoe9 from '../assets/shoe9.jpg';
-import shoe10 from '../assets/shoe10.jpg';
-import shoe11 from '../assets/shoe11.jpg';
-import shoe12 from '../assets/shoe12.jpg';
 
-const BEST_SELLERS = [
-  { id: 'bs1', name: 'Eclipse Sneakers', price: 'LKR 129,000.00', oldPrice: 'LKR 135,000.00', rating: '4.3', img: shoe5 },
-  { id: 'bs2', name: 'Grvity Oxford Shoe', price: 'LKR 120,000.00', oldPrice: 'LKR 126,000.00', rating: '4.3', img: shoe6 },
-  { id: 'bs3', name: 'Flexora Boot', price: 'LKR 156,000.00', oldPrice: 'LKR 159,000.00', rating: '4.1', img: shoe7 },
-  { id: 'bs4', name: 'Boltrek Sports Shoe', price: 'LKR 96,000.00', oldPrice: 'LKR 105,000.00', rating: '4.3', img: shoe8 },
-  { id: 'bs5', name: 'Formal Movo Shoe', price: 'LKR 129,000.00', oldPrice: 'LKR 132,000.00', rating: '4.1', img: shoe9 },
-  { id: 'bs6', name: 'Flexora High Neck', price: 'LKR 138,000.00', oldPrice: 'LKR 144,000.00', rating: '4.2', img: shoe10 },
-  { id: 'bs7', name: 'Runx Running Shoe', price: 'LKR 138,000.00', oldPrice: 'LKR 144,000.00', rating: '4.4', img: shoe11 },
-  { id: 'bs8', name: 'Yono Loafers', price: 'LKR 153,000.00', oldPrice: 'LKR 156,000.00', rating: '4.5', img: shoe12 },
-];
 
-const COLLECTIONS = [
-  {
-    id: 'sports',
-    label: 'Sports Collection',
-    desc: [
-      'Performance-driven footwear for every sport.',
-      'Stay safe with shoes built for durability.',
-      'Designed for athletes, made for champions.',
-      'Boost your performance with our sports collection.',
-    ],
-    emoji: '👟',
-    color: '#fff4f0',
-  },
-  {
-    id: 'luxury',
-    label: 'Luxury Collection',
-    desc: [
-      'Premium materials, exquisite craftsmanship.',
-      'Handcrafted details for the discerning eye.',
-      'Elevate every outfit with timeless elegance.',
-      'Experience footwear at its finest.',
-    ],
-    emoji: '👠',
-    color: '#f9f5ff',
-  },
-  {
-    id: 'kids',
-    label: 'Kids Collection',
-    desc: [
-      'Fun designs that kids absolutely love.',
-      'Durable construction for active little ones.',
-      'Lightweight and easy to put on.',
-      'Sizes for every growing foot.',
-    ],
-    emoji: '👟',
-    color: '#f0fff4',
-  },
-  {
-    id: 'casual',
-    label: 'Casual Collection',
-    desc: [
-      'Everyday comfort meets modern style.',
-      'Versatile designs for any occasion.',
-      'All-day support you can feel.',
-      'Look great without trying too hard.',
-    ],
-    emoji: '🥿',
-    color: '#fffbeb',
-  },
-];
-
-const FEATURES = [
-  { id: 'lightweight', icon: '🪶', label: 'Lightweight', desc: 'Feather-light construction for all-day comfort' },
-  { id: 'durable', icon: '🏗️', label: 'Durable Build', desc: 'Built to last through any adventure' },
-  { id: 'breathable', icon: '💨', label: 'Breathable Design', desc: 'Advanced airflow keeps feet fresh all day' },
-  { id: 'style', icon: '✨', label: 'Modern Style', desc: 'Contemporary designs for every occasion' },
-  { id: 'fit', icon: '👟', label: 'Perfect Fit', desc: 'Ergonomic design for your natural foot shape' },
-  { id: 'care', icon: '🧹', label: 'Easy Care', desc: 'Simple maintenance for long-lasting looks' },
-];
-
-const POPULAR = [
-  { id: 'pop-sports', cat: 'Sports', bg: '#dbeafe', emoji: '👟' },
-  { id: 'pop-casual', cat: 'Casual', bg: '#fef3c7', emoji: '🥿' },
-  { id: 'pop-kids', cat: 'Kids', bg: '#dcfce7', emoji: '👟' },
-];
-
-const TESTIMONIALS = [
-  {
-    id: 'anna',
-    name: 'Anna de Forsi',
-    role: 'Runner',
-    stars: 5,
-    text: 'I absolutely love these shoes! They are stylish, comfortable, and perfect for my everyday runs. The quality is excellent and they make every step feel amazing.',
-  },
-  {
-    id: 'ali',
-    name: 'Ali Mansour',
-    role: 'Designer',
-    stars: 5,
-    text: 'Stylish shoes are a game changer. They fit perfectly, feel incredibly supportive, and are durable enough for my active lifestyle. Highly recommend!',
-  },
-  {
-    id: 'omar',
-    name: 'Omar Al-Hakem',
-    role: 'Designer',
-    stars: 5,
-    text: 'These shoes combine fashion and comfort flawlessly. Lightweight, breathable, and high quality — they\'re my absolute favourite pair.',
-  },
-];
 
 export default function Landing() {
+  const [bestSellers, setBestSellers] = useState([]);
   const [activeTab, setActiveTab] = useState('sports');
   const activeCol = COLLECTIONS.find((c) => c.id === activeTab);
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await axios.get('http://localhost:8000/products');
+        setBestSellers(response.data.slice(0, 8));
+      } catch (error) {
+        console.error('Error fetching best sellers:', error);
+      }
+    }
+    fetchProducts();
+  }, []);
+
+  const formatPrice = (priceStr) => {
+    const num = Number(priceStr);
+    return isNaN(num) ? priceStr : `LKR ${num.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
 
   return (
     <div className="landing">
@@ -212,25 +124,25 @@ export default function Landing() {
       <section className="best-sellers-section">
         <h2 className="section-title">Best Sellers</h2>
         <div className="best-sellers-grid">
-          {BEST_SELLERS.map((item) => (
-            <div key={item.id} className="bs-card">
+          {bestSellers.map((item) => (
+            <Link key={item.id} to={`/products/${item.id}`} className="bs-card" style={{ textDecoration: 'none' }}>
               <div className="bs-card-img">
-                <img src={item.img} alt={item.name} />
+                <img src={item.image_url} alt={item.name} />
               </div>
               <div className="bs-card-body">
                 <div className="bs-card-header">
                   <h3>{item.name}</h3>
                   <div className="bs-rating">
                     <Star size={14} fill="#f97316" color="#f97316" />
-                    <span>({item.rating})</span>
+                    <span>({Number(item.rating || 0).toFixed(1)})</span>
                   </div>
                 </div>
                 <div className="bs-card-price">
-                  <span className="current-price">{item.price}</span>
-                  <span className="old-price">{item.oldPrice}</span>
+                  <span className="current-price">{formatPrice(item.price)}</span>
+                  {item.old_price && <span className="old-price">{formatPrice(item.old_price)}</span>}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 export default function Cart() {
   const [cart, setCart] = useState(null);
@@ -12,6 +13,7 @@ export default function Cart() {
   const [orderDone, setOrderDone] = useState(false);
   
   const { isAuthenticated } = useAuth();
+  const { refreshCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +40,7 @@ export default function Cart() {
     try {
       await api.delete(`/cart/items/${itemId}`);
       fetchCart();
+      refreshCart();
     } catch {
       setError('Failed to remove item.');
     }
@@ -49,6 +52,7 @@ export default function Cart() {
     try {
       await api.post('/checkout/');
       setOrderDone(true);
+      refreshCart();
     } catch (err) {
       setError(err.response?.data?.detail || 'Checkout failed.');
     } finally {

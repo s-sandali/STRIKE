@@ -4,6 +4,7 @@ import { Star } from 'lucide-react';
 import axios from 'axios';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ export default function ProductDetails() {
   const [feedback, setFeedback] = useState('');
   
   const { isAuthenticated } = useAuth();
+  const { refreshCart } = useCart();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +42,7 @@ export default function ProductDetails() {
     try {
       await api.post('/cart/items', { product_id: product.id, quantity: Number(qty) });
       setFeedback('Added to cart!');
+      refreshCart();
     } catch (err) {
       setFeedback(err.response?.data?.detail || 'Failed to add to cart.');
     } finally {

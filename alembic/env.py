@@ -14,7 +14,7 @@ from app.database.session import Base
 config = context.config
 
 # Override sqlalchemy.url from application settings so we only keep credentials in .env
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+config.set_main_option("sqlalchemy.url", settings.DATABASE_URL.replace("%", "%%"))
 
 # Interpret the config file for Python logging.
 if config.config_file_name is not None:

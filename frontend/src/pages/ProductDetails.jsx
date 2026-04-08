@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Star } from 'lucide-react';
 import axios from 'axios';
+import api from '../api/axios';
+import { useAuth } from '../context/AuthContext';
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -9,6 +11,11 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState('M');
   const [qty, setQty] = useState(1);
+  const [adding, setAdding] = useState(false);
+  const [feedback, setFeedback] = useState('');
+  
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchProduct() {
@@ -23,6 +30,23 @@ export default function ProductDetails() {
     }
     fetchProduct();
   }, [id]);
+
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    setAdding(true);
+    try {
+      await api.post('/cart/items', { product_id: product.id, quantity: Number(qty) });
+      setFeedback('Added to cart!');
+    } catch (err) {
+      setFeedback(err.response?.data?.detail || 'Failed to add to cart.');
+    } finally {
+      setAdding(false);
+      setTimeout(() => setFeedback(''), 3000);
+    }
+  };
 
   if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}>Loading product details...</div>;
   if (!product) return <div style={{ padding: '4rem', textAlign: 'center' }}>Product not found.</div>;
@@ -84,10 +108,15 @@ export default function ProductDetails() {
               min={1} 
               onChange={(e) => setQty(e.target.value)} 
             />
-            <button className="add-to-cart-btn">
-              Add to Cart →
+            <button 
+              className="add-to-cart-btn" 
+              onClick={handleAddToCart}
+              disabled={adding}
+            >
+              {adding ? 'Adding...' : 'Add to Cart →'}
             </button>
           </div>
+          {feedback && <p style={{ marginTop: '0.5rem', color: '#10b981', fontWeight: '500' }}>{feedback}</p>}
 
           <div className="product-more-info">
             <h4 className="more-info-title">More Info</h4>

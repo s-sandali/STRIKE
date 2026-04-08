@@ -13,7 +13,6 @@ const CATEGORIES = [
   'Flats',
   'Beach Sandals',
   'Ballet Flats',
-  'Stilettos'
 ];
 
 const PRICE_RANGES = [

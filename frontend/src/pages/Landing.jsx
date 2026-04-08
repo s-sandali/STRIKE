@@ -2,14 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import shoe1 from '../assets/shoe1.jpg';
 import shoe2 from '../assets/shoe2.jpg';
+import shoe3 from '../assets/shoe3.jpg';
+import shoe4 from '../assets/shoe4.jpg';
 import { Recycle, ShieldCheck, Truck, Globe } from 'lucide-react';
 
 
-const BEST_SELLERS = [
-  { id: 'mens-sprint', name: "Men's Sprint Sports Shoe", price: '$190.90', emoji: '👟' },
-  { id: 'kids-hightop', name: "High-Top Kids' Sneakers", price: '$100.50', emoji: '👟' },
-  { id: 'brown-formal', name: 'Brown Formal Shoes', price: '$250.90', emoji: '👞' },
-];
+
 
 const COLLECTIONS = [
   {
@@ -169,50 +167,28 @@ export default function Landing() {
 
 
 
-      {/* ── Best Sellers ───────────────────────────────── */}
-      <section className="lp-section lp-bg-light">
-        <h2 className="lp-section-title">Best Sellers</h2>
-        <div className="lp-sellers-grid">
-          {BEST_SELLERS.map((item) => (
-            <div key={item.id} className="lp-seller-card">
-              <div className="lp-seller-img">{item.emoji}</div>
-              <h4>{item.name}</h4>
-              <p className="lp-price">{item.price}</p>
-              <Link to="/products" className="btn lp-btn-orange lp-btn-sm">Shop Now</Link>
-            </div>
-          ))}
-        </div>
-      </section>
 
-      {/* ── Collections ────────────────────────────────── */}
-      <section className="lp-section">
-        <h2 className="lp-section-title">
-          Bring stylish and comfortable<br />footwear to everyone.
-        </h2>
-        <div className="lp-tabs">
-          {COLLECTIONS.map((c) => (
-            <button
-              key={c.id}
-              className={`lp-tab ${activeTab === c.id ? 'lp-tab-active' : ''}`}
-              onClick={() => setActiveTab(c.id)}
-            >
-              {c.label}
-            </button>
-          ))}
-        </div>
-        <div className="lp-collection-panel" style={{ background: activeCol.color }}>
-          <div className="lp-collection-text">
-            <h3>{activeCol.label}</h3>
-            <ul>
-              {activeCol.desc.map((line) => (
-                <li key={line}>{line}</li>
-              ))}
-            </ul>
-            <Link to="/products" className="btn lp-btn-orange" style={{ marginTop: '1.5rem' }}>
-              See All Products
-            </Link>
+      {/* ── Promo Cards ────────────────────────────────── */}
+      <section className="promo-cards-section">
+        <div className="promo-cards-container">
+          <div className="promo-card" style={{ backgroundImage: `url(${shoe3})` }}>
+            <div className="promo-badge">20% OFF</div>
+            <div className="promo-content">
+              <h2>Explore All<br />Formal Shoes</h2>
+              <Link to="/products" className="promo-btn">
+                Shop Now <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </Link>
+            </div>
           </div>
-          <div className="lp-collection-img">{activeCol.emoji}</div>
+          <div className="promo-card" style={{ backgroundImage: `url(${shoe4})` }}>
+            <div className="promo-badge">25% OFF</div>
+            <div className="promo-content">
+              <h2>Grab The Latest<br />Running Shoes</h2>
+              <Link to="/products" className="promo-btn">
+                Shop Now <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

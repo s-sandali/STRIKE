@@ -220,3 +220,22 @@ test('e2e_product_detail_shows_info', async ({ page }) => {
   // Product description must be rendered below the fold
   await expect(page.locator('.product-description')).toBeVisible();
 });
+
+// ─── Test 12 ──────────────────────────────────────────────────────────────────
+test('e2e_product_detail_size_selection', async ({ page }) => {
+  await page.goto('/products');
+  await page.locator('.shop-card').first().click();
+  await expect(page.locator('.product-details-container')).toBeVisible();
+
+  const sizes = page.locator('.size-btn');
+  await expect(sizes.first()).toBeVisible();
+
+  // Click the third size button (index 2) — a clear change from the default
+  await sizes.nth(2).click();
+
+  // The clicked button must now have the active class
+  await expect(sizes.nth(2)).toHaveClass(/active/);
+
+  // The first button must no longer be active
+  await expect(sizes.first()).not.toHaveClass(/active/);
+});

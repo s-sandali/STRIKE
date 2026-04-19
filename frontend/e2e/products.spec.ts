@@ -77,3 +77,21 @@ test('e2e_landing_reviews_carousel', async ({ page }) => {
   const scrollAfter = await scrollContainer.evaluate(el => el.scrollLeft);
   expect(scrollAfter).toBeGreaterThan(scrollBefore);
 });
+
+// ─── Test 5 ───────────────────────────────────────────────────────────────────
+test('e2e_products_page_loads', async ({ page }) => {
+  await page.goto('/products');
+
+  // Page wrapper must be present
+  await expect(page.locator('.shop-page-wrapper')).toBeVisible();
+
+  // Default header shows when no filter is active
+  await expect(page.locator('.shop-header h1')).toHaveText('Explore Our Shop');
+
+  // Wait for the API response — grid appears once products are fetched
+  const grid = page.locator('.shop-grid');
+  await expect(grid).toBeVisible();
+
+  // At least one product card must have loaded
+  await expect(page.locator('.shop-card').first()).toBeVisible();
+});

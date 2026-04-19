@@ -36,3 +36,33 @@ test('e2e_error_state_products', async ({ page }) => {
   await expect(page.locator('.no-products-msg')).toBeVisible();
   await expect(page.locator('.shop-grid')).not.toBeVisible();
 });
+
+// ─── Test 23 ──────────────────────────────────────────────────────────────────
+test('e2e_feedback_disappears', async ({ page, request }) => {
+  const email = 'feedbacktest@example.com';
+  const password = 'FeedTest123!';
+
+  // Ensure the test user exists
+  await request.post('http://localhost:8000/auth/register', {
+    data: { email, password },
+  });
+
+  // Log in through the UI
+  await page.goto('/login');
+  await page.locator('input[name="username"]').fill(email);
+  await page.locator('input[name="password"]').fill(password);
+  await page.locator('button[type="submit"]').click();
+  await expect(page).toHaveURL('/products');
+
+  // Navigate into the first product
+  await page.locator('.shop-card').first().click();
+  await expect(page.locator('.add-to-cart-btn')).toBeVisible();
+
+  // Add to cart — feedback message appears immediately
+  await page.locator('.add-to-cart-btn').click();
+  await expect(page.getByText('Added to cart!')).toBeVisible();
+
+  // After 3000ms the component clears feedback — wait just past that
+  await page.waitForTimeout(3500);
+  await expect(page.getByText('Added to cart!')).not.toBeVisible();
+});

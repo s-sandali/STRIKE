@@ -52,3 +52,29 @@ test('e2e_navbar_unauthenticated', async ({ page }) => {
   // Scoped by href to avoid matching the cart button which shares the same class
   await expect(page.locator('a.navbar-icon-btn[href="/login"]')).toBeVisible();
 });
+
+// ─── Test 19 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_authenticated', async ({ page, request }) => {
+  const email = 'navtest@example.com';
+  const password = 'NavTest123!';
+
+  // Register the user via API — ignore 409 if already exists from a previous run
+  await request.post('http://localhost:8000/auth/register', {
+    data: { email, password },
+  });
+
+  // Log in through the UI
+  await page.goto('/login');
+  await page.locator('input[name="username"]').fill(email);
+  await page.locator('input[name="password"]').fill(password);
+  await page.locator('button[type="submit"]').click();
+
+  // After login, the app navigates to /products
+  await expect(page).toHaveURL('/products');
+
+  // Logout button must now be visible — user is authenticated
+  await expect(page.locator('.logout-btn')).toBeVisible();
+
+  // Login icon link must be gone — no longer needed
+  await expect(page.locator('a.navbar-icon-btn[href="/login"]')).not.toBeVisible();
+});

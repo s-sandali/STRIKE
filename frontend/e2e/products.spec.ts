@@ -116,3 +116,21 @@ test('e2e_products_filter_category', async ({ page }) => {
   const emptyVisible = await page.locator('.no-products-msg').isVisible();
   expect(gridVisible || emptyVisible).toBe(true);
 });
+
+// ─── Test 7 ───────────────────────────────────────────────────────────────────
+test('e2e_products_filter_price', async ({ page }) => {
+  await page.goto('/products');
+  await expect(page.locator('.shop-grid')).toBeVisible();
+
+  // Scope to the second sidebar group (price ranges)
+  const priceGroup = page.locator('.sidebar-group').nth(1);
+  await priceGroup.locator('li', { hasText: 'LKR 0 - LKR 10,000' }).click();
+
+  // The clicked price range must now be active
+  await expect(priceGroup.locator('li.active')).toContainText('LKR 0 - LKR 10,000');
+
+  // Filter must produce either results or the empty message — not a blank page
+  const gridVisible = await page.locator('.shop-grid').isVisible();
+  const emptyVisible = await page.locator('.no-products-msg').isVisible();
+  expect(gridVisible || emptyVisible).toBe(true);
+});

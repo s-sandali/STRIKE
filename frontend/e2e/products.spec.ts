@@ -95,3 +95,24 @@ test('e2e_products_page_loads', async ({ page }) => {
   // At least one product card must have loaded
   await expect(page.locator('.shop-card').first()).toBeVisible();
 });
+
+// ─── Test 6 ───────────────────────────────────────────────────────────────────
+test('e2e_products_filter_category', async ({ page }) => {
+  await page.goto('/products');
+  await expect(page.locator('.shop-grid')).toBeVisible();
+
+  // Scope to the first sidebar group (categories) to avoid matching price list
+  const categoryGroup = page.locator('.sidebar-group').first();
+  await categoryGroup.locator('li', { hasText: 'Heels' }).click();
+
+  // Header updates to the selected category name
+  await expect(page.locator('.shop-header h1')).toHaveText('Heels');
+
+  // The clicked item must have the active class
+  await expect(categoryGroup.locator('li.active')).toHaveText(/Heels/);
+
+  // Grid must still be present (results exist or empty message shown)
+  const gridVisible = await page.locator('.shop-grid').isVisible();
+  const emptyVisible = await page.locator('.no-products-msg').isVisible();
+  expect(gridVisible || emptyVisible).toBe(true);
+});

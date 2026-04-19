@@ -182,3 +182,41 @@ test('e2e_products_filter_reset', async ({ page }) => {
   const count = await cards.count();
   expect(count).toBeGreaterThan(1);
 });
+
+// ─── Test 10 ──────────────────────────────────────────────────────────────────
+test('e2e_product_detail_page_loads', async ({ page }) => {
+  await page.goto('/products');
+  await expect(page.locator('.shop-card').first()).toBeVisible();
+
+  // Click the first product card
+  await page.locator('.shop-card').first().click();
+
+  // URL must change to /products/<number>
+  await expect(page).toHaveURL(/\/products\/\d+/);
+
+  // Detail page container must be visible
+  await expect(page.locator('.product-details-container')).toBeVisible();
+});
+
+// ─── Test 11 ──────────────────────────────────────────────────────────────────
+test('e2e_product_detail_shows_info', async ({ page }) => {
+  await page.goto('/products');
+  await expect(page.locator('.shop-card').first()).toBeVisible();
+  await page.locator('.shop-card').first().click();
+  await expect(page.locator('.product-details-container')).toBeVisible();
+
+  // Product name must be present and non-empty
+  const title = page.locator('.product-title');
+  await expect(title).toBeVisible();
+  const titleText = await title.innerText();
+  expect(titleText.trim().length).toBeGreaterThan(0);
+
+  // Price must be displayed in LKR format
+  await expect(page.locator('.price-main').first()).toContainText('LKR');
+
+  // At least one size button must be available to select
+  await expect(page.locator('.size-btn').first()).toBeVisible();
+
+  // Product description must be rendered below the fold
+  await expect(page.locator('.product-description')).toBeVisible();
+});

@@ -26,3 +26,29 @@ test('e2e_navbar_cart_icon', async ({ page }) => {
   await expect(page).toHaveURL('/login');
   await expect(page.locator('.form-container')).toBeVisible();
 });
+
+// ─── Test 17 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_logo_home', async ({ page }) => {
+  // Start on an inner page to make the navigation meaningful
+  await page.goto('/products');
+  await expect(page.locator('.shop-page-wrapper')).toBeVisible();
+
+  // Click the brand logo
+  await page.locator('.navbar-brand').click();
+
+  // Must return to the landing page
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('.new-hero-title')).toBeVisible();
+});
+
+// ─── Test 18 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_unauthenticated', async ({ page }) => {
+  await page.goto('/');
+
+  // Logout button must not exist — no authenticated user
+  await expect(page.locator('.logout-btn')).not.toBeVisible();
+
+  // Login icon link must be present — invites the user to log in
+  // Scoped by href to avoid matching the cart button which shares the same class
+  await expect(page.locator('a.navbar-icon-btn[href="/login"]')).toBeVisible();
+});

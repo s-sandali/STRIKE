@@ -134,3 +134,28 @@ test('e2e_products_filter_price', async ({ page }) => {
   const emptyVisible = await page.locator('.no-products-msg').isVisible();
   expect(gridVisible || emptyVisible).toBe(true);
 });
+
+// ─── Test 8 ───────────────────────────────────────────────────────────────────
+test('e2e_products_filter_combined', async ({ page }) => {
+  await page.goto('/products');
+  await expect(page.locator('.shop-grid')).toBeVisible();
+
+  const categoryGroup = page.locator('.sidebar-group').first();
+  const priceGroup = page.locator('.sidebar-group').nth(1);
+
+  // Apply category filter first
+  await categoryGroup.locator('li', { hasText: 'Heels' }).click();
+  await expect(page.locator('.shop-header h1')).toHaveText('Heels');
+
+  // Then apply price filter on top
+  await priceGroup.locator('li', { hasText: 'LKR 15,001 - LKR 20,000' }).click();
+
+  // Both filters must show as active simultaneously
+  await expect(categoryGroup.locator('li.active')).toContainText('Heels');
+  await expect(priceGroup.locator('li.active')).toContainText('LKR 15,001 - LKR 20,000');
+
+  // Grid must respond — either matching products or the empty state
+  const gridVisible = await page.locator('.shop-grid').isVisible();
+  const emptyVisible = await page.locator('.no-products-msg').isVisible();
+  expect(gridVisible || emptyVisible).toBe(true);
+});

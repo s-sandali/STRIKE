@@ -78,3 +78,18 @@ test('e2e_navbar_authenticated', async ({ page, request }) => {
   // Login icon link must be gone — no longer needed
   await expect(page.locator('a.navbar-icon-btn[href="/login"]')).not.toBeVisible();
 });
+
+// ─── Test 20 ──────────────────────────────────────────────────────────────────
+test('e2e_unknown_route', async ({ page }) => {
+  // Collect any uncaught JS errors thrown during the page visit
+  const errors: string[] = [];
+  page.on('pageerror', err => errors.push(err.message));
+
+  await page.goto('/this-route-does-not-exist');
+
+  // The navbar must still render — the app shell did not crash
+  await expect(page.locator('.navbar')).toBeVisible();
+
+  // No unhandled JS exceptions must have been thrown
+  expect(errors).toHaveLength(0);
+});

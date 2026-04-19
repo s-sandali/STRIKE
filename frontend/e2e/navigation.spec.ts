@@ -13,3 +13,14 @@ test('e2e_navbar_links_work', async ({ page }) => {
   // Products page must render
   await expect(page.locator('.shop-page-wrapper')).toBeVisible();
 });
+
+// ─── Test 16 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_cart_icon', async ({ page }) => {
+  await page.goto('/');
+
+  // Click the cart icon button in the navbar
+  await page.locator('.navbar-cart-btn').click();
+
+  // Must navigate to /cart
+  await expect(page).toHaveURL('/cart');
+});

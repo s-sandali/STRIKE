@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 
 import { Recycle, ShieldCheck, Truck, Globe, Star } from 'lucide-react';
 import PromoCarousel from '../components/PromoCarousel';
@@ -14,7 +14,7 @@ export default function Landing() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const response = await axios.get('http://localhost:8000/products');
+        const response = await api.get('/products');
         setBestSellers(response.data.slice(0, 8));
       } catch (error) {
         console.error('Error fetching best sellers:', error);

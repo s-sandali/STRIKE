@@ -1,0 +1,95 @@
+import { test, expect } from '@playwright/test';
+
+// ─── Test 15 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_links_work', async ({ page }) => {
+  await page.goto('/');
+
+  // Click the "Shop" link in the navbar
+  await page.locator('.navbar-links a').click();
+
+  // URL must update to /products
+  await expect(page).toHaveURL('/products');
+
+  // Products page must render
+  await expect(page.locator('.shop-page-wrapper')).toBeVisible();
+});
+
+// ─── Test 16 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_cart_icon', async ({ page }) => {
+  await page.goto('/');
+
+  // Click the cart icon button in the navbar
+  await page.locator('.navbar-cart-btn').click();
+
+  // Cart.jsx redirects unauthenticated users to /login — this is correct behaviour.
+  // The icon navigates to /cart, and /cart enforces auth by redirecting immediately.
+  await expect(page).toHaveURL('/login');
+  await expect(page.locator('.form-container')).toBeVisible();
+});
+
+// ─── Test 17 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_logo_home', async ({ page }) => {
+  // Start on an inner page to make the navigation meaningful
+  await page.goto('/products');
+  await expect(page.locator('.shop-page-wrapper')).toBeVisible();
+
+  // Click the brand logo
+  await page.locator('.navbar-brand').click();
+
+  // Must return to the landing page
+  await expect(page).toHaveURL('/');
+  await expect(page.locator('.new-hero-title')).toBeVisible();
+});
+
+// ─── Test 18 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_unauthenticated', async ({ page }) => {
+  await page.goto('/');
+
+  // Logout button must not exist — no authenticated user
+  await expect(page.locator('.logout-btn')).not.toBeVisible();
+
+  // Login icon link must be present — invites the user to log in
+  // Scoped by href to avoid matching the cart button which shares the same class
+  await expect(page.locator('a.navbar-icon-btn[href="/login"]')).toBeVisible();
+});
+
+// ─── Test 19 ──────────────────────────────────────────────────────────────────
+test('e2e_navbar_authenticated', async ({ page, request }) => {
+  const email = 'navtest@example.com';
+  const password = 'NavTest123!';
+
+  // Register the user via API — ignore 409 if already exists from a previous run
+  await request.post('http://localhost:8000/auth/register', {
+    data: { email, password },
+  });
+
+  // Log in through the UI
+  await page.goto('/login');
+  await page.locator('input[name="username"]').fill(email);
+  await page.locator('input[name="password"]').fill(password);
+  await page.locator('button[type="submit"]').click();
+
+  // After login, the app navigates to /products
+  await expect(page).toHaveURL('/products');
+
+  // Logout button must now be visible — user is authenticated
+  await expect(page.locator('.logout-btn')).toBeVisible();
+
+  // Login icon link must be gone — no longer needed
+  await expect(page.locator('a.navbar-icon-btn[href="/login"]')).not.toBeVisible();
+});
+
+// ─── Test 20 ──────────────────────────────────────────────────────────────────
+test('e2e_unknown_route', async ({ page }) => {
+  // Collect any uncaught JS errors thrown during the page visit
+  const errors: string[] = [];
+  page.on('pageerror', err => errors.push(err.message));
+
+  await page.goto('/this-route-does-not-exist');
+
+  // The navbar must still render — the app shell did not crash
+  await expect(page.locator('.navbar')).toBeVisible();
+
+  // No unhandled JS exceptions must have been thrown
+  expect(errors).toHaveLength(0);
+});

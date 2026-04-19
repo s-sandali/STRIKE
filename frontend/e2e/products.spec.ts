@@ -37,3 +37,21 @@ test('e2e_landing_promo_carousel_auto', async ({ page }) => {
   const titleAfter = await activeTitle.innerText();
   expect(titleAfter).not.toBe(titleBefore);
 });
+
+// ─── Test 3 ───────────────────────────────────────────────────────────────────
+test('e2e_landing_promo_carousel_manual', async ({ page }) => {
+  await page.goto('/');
+
+  const dots = page.locator('.promo-indicator-dot');
+  await expect(dots.first()).toBeVisible();
+
+  // Click the 3rd dot (index 2) — slide 0 is active on load so this is a real change
+  await dots.nth(2).click();
+
+  // The 3rd dot must now carry the active class
+  await expect(dots.nth(2)).toHaveClass(/active/);
+
+  // And the active slide title must match slide 3: "10% OFF!"
+  const activeTitle = page.locator('.promo-carousel-slide.active .promo-carousel-title');
+  await expect(activeTitle).toHaveText('10% OFF!');
+});

@@ -55,3 +55,25 @@ test('e2e_landing_promo_carousel_manual', async ({ page }) => {
   const activeTitle = page.locator('.promo-carousel-slide.active .promo-carousel-title');
   await expect(activeTitle).toHaveText('10% OFF!');
 });
+
+// ─── Test 4 ───────────────────────────────────────────────────────────────────
+test('e2e_landing_reviews_carousel', async ({ page }) => {
+  await page.goto('/');
+
+  const scrollContainer = page.locator('.reviews-scroll-container');
+  await expect(scrollContainer).toBeVisible();
+
+  // Read scrollLeft before clicking — runs real JS inside the browser
+  const scrollBefore = await scrollContainer.evaluate(el => el.scrollLeft);
+
+  // Click the right arrow (nth(1) = right, nth(0) = left)
+  const rightArrow = page.locator('.nav-btn').nth(1);
+  await rightArrow.click();
+
+  // Give the smooth scroll animation time to settle
+  await page.waitForTimeout(400);
+
+  // scrollLeft must have increased — content scrolled to the right
+  const scrollAfter = await scrollContainer.evaluate(el => el.scrollLeft);
+  expect(scrollAfter).toBeGreaterThan(scrollBefore);
+});

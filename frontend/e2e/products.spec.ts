@@ -255,3 +255,21 @@ test('e2e_product_detail_quantity_change', async ({ page }) => {
   // Input must reflect the new value
   await expect(qtyInput).toHaveValue('3');
 });
+
+// ─── Test 14 ──────────────────────────────────────────────────────────────────
+test('e2e_product_detail_add_button_present', async ({ page }) => {
+  await page.goto('/products');
+  await page.locator('.shop-card').first().click();
+  await expect(page.locator('.product-details-container')).toBeVisible();
+
+  const addBtn = page.locator('.add-to-cart-btn');
+
+  // Button must be visible
+  await expect(addBtn).toBeVisible();
+
+  // Button must show the ready state label, not the loading state ("Adding...")
+  await expect(addBtn).toContainText('Add to Cart');
+
+  // Button must be enabled — not disabled by a stuck loading state
+  await expect(addBtn).toBeEnabled();
+});

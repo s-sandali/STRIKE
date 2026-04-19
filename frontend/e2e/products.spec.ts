@@ -239,3 +239,19 @@ test('e2e_product_detail_size_selection', async ({ page }) => {
   // The first button must no longer be active
   await expect(sizes.first()).not.toHaveClass(/active/);
 });
+
+// ─── Test 13 ──────────────────────────────────────────────────────────────────
+test('e2e_product_detail_quantity_change', async ({ page }) => {
+  await page.goto('/products');
+  await page.locator('.shop-card').first().click();
+  await expect(page.locator('.product-details-container')).toBeVisible();
+
+  const qtyInput = page.locator('.qty-input');
+  await expect(qtyInput).toBeVisible();
+
+  // Clear the existing value and type a new quantity
+  await qtyInput.fill('3');
+
+  // Input must reflect the new value
+  await expect(qtyInput).toHaveValue('3');
+});

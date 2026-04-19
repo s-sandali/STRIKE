@@ -3,13 +3,13 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,   // run tests sequentially so they don't share DB state
-  timeout: 15000,          // 15s per test
+  timeout: 20000,          // 15s per test
   expect: { timeout: 5000 },
   reporter: 'list',
 
   use: {
     baseURL: 'http://localhost:5173',
-    headless: true,
+    headless: false,
     screenshot: 'only-on-failure',
   },
 

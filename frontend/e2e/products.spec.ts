@@ -159,3 +159,26 @@ test('e2e_products_filter_combined', async ({ page }) => {
   const emptyVisible = await page.locator('.no-products-msg').isVisible();
   expect(gridVisible || emptyVisible).toBe(true);
 });
+
+// ─── Test 9 ───────────────────────────────────────────────────────────────────
+test('e2e_products_filter_reset', async ({ page }) => {
+  await page.goto('/products');
+  await expect(page.locator('.shop-grid')).toBeVisible();
+
+  const categoryGroup = page.locator('.sidebar-group').first();
+
+  // Apply a filter first so there is something to reset
+  await categoryGroup.locator('li', { hasText: 'Heels' }).click();
+  await expect(page.locator('.shop-header h1')).toHaveText('Heels');
+
+  // Click "All Products" to reset
+  await categoryGroup.locator('li', { hasText: 'All Products' }).click();
+
+  // Header must revert to the default title
+  await expect(page.locator('.shop-header h1')).toHaveText('Explore Our Shop');
+
+  // Full grid must be back — more than one card visible
+  const cards = page.locator('.shop-card');
+  const count = await cards.count();
+  expect(count).toBeGreaterThan(1);
+});

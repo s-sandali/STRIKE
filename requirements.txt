@@ -11,3 +11,10 @@ pydantic[email]>=2.11
 pydantic-settings>=2.7
 python-dotenv>=1.0
 
+# Testing dependencies
+pytest>=7.0
+pytest-asyncio>=0.21.0
+pytest-env>=0.5.0
+freezegun>=1.2.0
+httpx>=0.24.0
+

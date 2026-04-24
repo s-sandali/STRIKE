@@ -8,13 +8,11 @@ test.use({ baseURL: FRONTEND_URL });
 test.beforeEach(async ({ page }) => {
   page.on('console', msg => console.log('BROWSER CONSOLE:', msg.text()));
   page.on('pageerror', err => console.log('BROWSER ERROR:', err.message));
-  // Clear storage only once per test (before login), not on every navigation
-  await page.addInitScript(() => {
-    if (!(window as any).__storageCleared) {
-      localStorage.clear();
-      sessionStorage.clear();
-      (window as any).__storageCleared = true;
-    }
+  // Navigate first so we have a page context, then clear storage once
+  await page.goto('/');
+  await page.evaluate(() => {
+    localStorage.clear();
+    sessionStorage.clear();
   });
   await page.context().clearCookies();
 });
@@ -44,11 +42,16 @@ const mockProduct = {
 };
 
 async function setupBaseMocks(page: Page) {
-  await page.route(`${API_URL}/products/`, async (route) => {
-    await fulfillJson(route, 200, [mockProduct]);
-  });
-  await page.route(`${API_URL}/products/1`, async (route) => {
-    await fulfillJson(route, 200, mockProduct);
+  // Use a single handler to avoid the list mock intercepting detail requests
+  await page.route(`${API_URL}/products/**`, async (route) => {
+    const url = route.request().url();
+    if (/\/products\/\d+$/.test(url)) {
+      // Single product detail request
+      await fulfillJson(route, 200, mockProduct);
+    } else {
+      // Product list request
+      await fulfillJson(route, 200, [mockProduct]);
+    }
   });
 }
 

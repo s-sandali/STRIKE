@@ -1,8 +1,13 @@
 from logging.config import fileConfig
+import sys
+from pathlib import Path
 
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
+
+# ── Add project root to Python path ─────────────────────────────────────────────
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 # ── App imports ───────────────────────────────────────────────────────────────
 from app.config import settings

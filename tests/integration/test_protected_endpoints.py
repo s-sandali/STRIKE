@@ -162,7 +162,7 @@ class TestProductCreationAuthorization:
         assert response.status_code == 201
         data = response.json()
         assert data["name"] == "Authenticated Product"
-        assert data["price"] == 79.99
+        assert float(data["price"]) == 79.99
     
     def test_create_product_with_invalid_token(self, client: TestClient):
         """Test that POST /products with invalid token returns 401."""

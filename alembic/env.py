@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+
+# Ensure the project root (parent of alembic/) is on sys.path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool

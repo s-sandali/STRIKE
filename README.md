@@ -1,6 +1,6 @@
-# E-Commerce API
+# STRIKE: Shoe Store E-Commerce Platform
 
-A minimal, production-style e-commerce REST API built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.
+A Shoe Store E-Commerce Platform, REST API built with **FastAPI**, **SQLAlchemy**, and **PostgreSQL**.
 
 ---
 
@@ -13,6 +13,25 @@ A minimal, production-style e-commerce REST API built with **FastAPI**, **SQLAlc
 | Products CRUD | `POST /products/`, `GET /products/`, `GET /products/{id}` |
 | Cart Management | `GET /cart/`, `POST /cart/items`, `DELETE /cart/items/{id}` |
 | Checkout | `POST /checkout/` |
+
+---
+
+## Team & Test Coverage
+
+| Member | Name | Tool | Feature | Test File | Tests |
+|--------|------|------|---------|-----------|------:|
+| 1 | KARUNARATHNA H.W.H.H -IT23592506 | Pytest | Pydantic schema validation | [`backend/tests/unit/test_schemas.py`](backend/tests/unit/test_schemas.py) | 24 |
+| 1 | KARUNARATHNA H.W.H.H -IT23592506 | Pytest | Password hashing & security | [`backend/tests/unit/test_security.py`](backend/tests/unit/test_security.py) | 10 |
+| 2 | Kavithma Athukorala- IT23613072 | Pytest | Shared fixtures (DB, client, seeded user) | [`backend/tests/conftest.py`](backend/tests/conftest.py) | — |
+| 2 | Kavithma Athukorala- IT23613072 | Pytest | JWT token creation & decoding | [`backend/tests/unit/test_jwt.py`](backend/tests/unit/test_jwt.py) | 8 |
+| 2 | Kavithma Athukorala- IT23613072| Pytest | Auth endpoint integration (`/auth/register`, `/auth/login`) | [`backend/tests/integration/test_auth.py`](backend/tests/integration/test_auth.py) | 8 |
+| 3 | H.D Hettiarachci-IT23736832 | Playwright | Authentication E2E (register, login, logout, redirect) | [`frontend/e2e/auth.spec.ts`](frontend/e2e/auth.spec.ts) | 8 |
+| 3 | H.D Hettiarachci-IT23736832 | Playwright | Cart E2E (add, remove, checkout, badge) | [`frontend/e2e/cart.spec.ts`](frontend/e2e/cart.spec.ts) | 8 |
+| 4 | Sandali J.S IT23651456 | Playwright | Product browsing, filtering & detail page | [`frontend/e2e/products.spec.ts`](frontend/e2e/products.spec.ts) | 14 |
+| 4 | Sandali J.S IT23651456 | Playwright | Navbar & routing | [`frontend/e2e/navigation.spec.ts`](frontend/e2e/navigation.spec.ts) | 6 |
+| 4 | Sandali J.S IT23651456 | Playwright | Loading states, error states & responsive layout | [`frontend/e2e/ui-state.spec.ts`](frontend/e2e/ui-state.spec.ts) | 4 |
+
+> **Note on test counts:** Pytest parametrized cases are counted individually (e.g. a `@pytest.mark.parametrize` with 4 values = 4 tests). `conftest.py` contains only shared fixtures; it has no runnable tests of its own.
 
 ---
 

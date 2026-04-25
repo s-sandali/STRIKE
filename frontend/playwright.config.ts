@@ -2,29 +2,31 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './e2e',
-  fullyParallel: false,   // run tests sequentially so they don't share DB state
-  timeout: 20000,          // 15s per test
-  expect: { timeout: 5000 },
-  reporter: 'list',
-
-  use: {
-    baseURL: 'http://localhost:5173',
-    headless: false,
-    screenshot: 'only-on-failure',
+  timeout: 60_000,
+  expect: {
+    timeout: 10_000,
   },
-
+  fullyParallel: false,
+  retries: 0,
+  reporter: 'list',
+  use: {
+    baseURL: process.env.E2E_BASE_URL || 'http://127.0.0.1:5173',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    launchOptions: { slowMo: 800 },
+    video: 'on',
+  },
   projects: [
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-
-  // Start the Vite dev server automatically before running tests
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:5173',
+    command: 'npm.cmd run dev -- --host 127.0.0.1 --port 5173',
+    cwd: '.',
+    url: 'http://127.0.0.1:5173',
     reuseExistingServer: true,
-    timeout: 30000,
+    timeout: 120_000,
   },
 });

@@ -5,9 +5,7 @@ Provides:
   - `db_session`   – an isolated SQLite in-memory session that rolls back
                      after every test so tests never pollute each other.
   - `client`       – a FastAPI TestClient wired to the test DB session.
-  - `auth_headers` – a helper fixture that registers + logs in a user and
-                     returns the Authorization header dict ready to pass to
-                     client.get/post/delete calls.
+  - `seeded_user`  – a pre-created test user for login tests.
 """
 
 import pytest
@@ -17,6 +15,8 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database.session import Base, get_db
 from app.main import app
+from app.models.user import User
+from app.services.security import hash_password
 
 # ── Test database (SQLite in-memory, one file per test run) ──────────────────
 TEST_DATABASE_URL = "sqlite:///./test.db"
@@ -65,24 +65,22 @@ def client(db_session):
     app.dependency_overrides.clear()
 
 
-# ── Auth helper fixture ───────────────────────────────────────────────────────
+# ── Seeded user fixture ───────────────────────────────────────────────────────
 @pytest.fixture(scope="function")
-def auth_headers(client):
+def seeded_user(db_session):
     """
-    Registers a throw-away test user, logs in, and returns an Authorization
-    header dict so authenticated endpoints can be called with:
-
-        client.get("/cart/", headers=auth_headers)
+    Creates a pre-existing test user in the database.
+    
+    Email: testuser@example.com
+    Password: TestPass123!
+    
+    Used for login tests and other scenarios requiring a known user.
     """
-    credentials = {"email": "testuser@example.com", "password": "TestPass123!"}
-
-    # Register
-    client.post("/auth/register", json=credentials)
-
-    # Login (OAuth2 form-encoded)
-    response = client.post(
-        "/auth/login",
-        data={"username": credentials["email"], "password": credentials["password"]},
+    user = User(
+        email="testuser@example.com",
+        hashed_password=hash_password("TestPass123!")
     )
-    token = response.json()["access_token"]
-    return {"Authorization": f"Bearer {token}"}
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+    return user

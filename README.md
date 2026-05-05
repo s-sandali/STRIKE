@@ -20,11 +20,11 @@ A Shoe Store E-Commerce Platform, REST API built with **FastAPI**, **SQLAlchemy*
 
 | Member | Name | Tool | Feature | Test File | Tests |
 |--------|------|------|---------|-----------|------:|
-| 1 | KARUNARATHNA H.W.H.H -IT23592506 | Pytest | Pydantic schema validation | [`backend/tests/unit/test_schemas.py`](backend/tests/unit/test_schemas.py) | 24 |
-| 1 | KARUNARATHNA H.W.H.H -IT23592506 | Pytest | Password hashing & security | [`backend/tests/unit/test_security.py`](backend/tests/unit/test_security.py) | 10 |
-| 2 | Kavithma Athukorala- IT23613072 | Pytest | Shared fixtures (DB, client, seeded user) | [`backend/tests/conftest.py`](backend/tests/conftest.py) | — |
-| 2 | Kavithma Athukorala- IT23613072 | Pytest | JWT token creation & decoding | [`backend/tests/unit/test_jwt.py`](backend/tests/unit/test_jwt.py) | 8 |
-| 2 | Kavithma Athukorala- IT23613072| Pytest | Auth endpoint integration (`/auth/register`, `/auth/login`) | [`backend/tests/integration/test_auth.py`](backend/tests/integration/test_auth.py) | 8 |
+| 1 | KARUNARATHNA H.W.H.H -IT23592506 | Pytest | Pydantic schema validation | [`tests/unit/test_schemas.py`](tests/unit/test_schemas.py) | 24 |
+| 1 | KARUNARATHNA H.W.H.H -IT23592506 | Pytest | Password hashing & security | [`tests/unit/test_security.py`](tests/unit/test_security.py) | 10 |
+| 2 | Kavithma Athukorala- IT23613072 | Pytest | Shared fixtures (DB, client, seeded user) | [`tests/conftest.py`](tests/conftest.py) | — |
+| 2 | Kavithma Athukorala- IT23613072 | Pytest | JWT token creation & decoding | [`tests/unit/test_jwt.py`](tests/unit/test_jwt.py) | 8 |
+| 2 | Kavithma Athukorala- IT23613072| Pytest | Auth endpoint integration (`/auth/register`, `/auth/login`) | [`tests/integration/test_auth.py`](tests/integration/test_auth.py) | 8 |
 | 3 | H.D Hettiarachci-IT23736832 | Playwright | Authentication E2E (register, login, logout, redirect) | [`frontend/e2e/auth.spec.ts`](frontend/e2e/auth.spec.ts) | 8 |
 | 3 | H.D Hettiarachci-IT23736832 | Playwright | Cart E2E (add, remove, checkout, badge) | [`frontend/e2e/cart.spec.ts`](frontend/e2e/cart.spec.ts) | 8 |
 | 4 | Sandali J.S IT23651456 | Playwright | Product browsing, filtering & detail page | [`frontend/e2e/products.spec.ts`](frontend/e2e/products.spec.ts) | 14 |
@@ -188,6 +188,54 @@ curl -X POST http://localhost:8000/cart/items \
 curl -X POST http://localhost:8000/checkout/ \
   -H "Authorization: Bearer $TOKEN"
 ```
+
+---
+
+## Running Tests
+
+### PyTest (Unit & Integration)
+
+Run from the project root with the virtual environment activated:
+
+```bash
+# Activate venv (Windows)
+venv\Scripts\activate
+
+# Run all tests
+pytest
+
+# Run with verbose output
+pytest -v
+
+# Run a specific file
+pytest tests/unit/test_schemas.py
+pytest tests/unit/test_security.py
+pytest tests/unit/test_jwt.py
+pytest tests/integration/test_auth.py
+```
+
+> Tests use an isolated SQLite database — no PostgreSQL connection required.
+
+---
+
+### Playwright E2E Tests
+
+Run from the `frontend/` directory:
+
+```bash
+cd frontend
+
+# Run all E2E tests (headless)
+npm run test:e2e
+
+# Run with browser visible
+npm run test:e2e:headed
+
+# Open the HTML report after a run
+npm run test:e2e:report
+```
+
+> The Vite dev server starts automatically. The FastAPI backend must be running separately on `http://localhost:8000`.
 
 ---
 
